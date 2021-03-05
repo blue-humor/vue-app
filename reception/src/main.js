@@ -6,6 +6,8 @@ import router from './router'
 import Header from './components/Header/Header.vue'
 import store from './vuex/store'
 import Start from './components/Start/Start.vue'
+import * as API from './api'
+Vue.prototype.$API = API
 
 
 // Vue.use(VeeValidate)

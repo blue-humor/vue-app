@@ -1,7 +1,6 @@
 /* 包含n个用于间接更新的方法对象
 可以包含异步/逻辑代码
 */
-
 import {
   reqAddress,
   reqShops,
@@ -10,7 +9,11 @@ import {
 import {
   RECEIVE_ADDRESS,
   RECEIVE_CATEGORYS,
-  RECEIVE_SHOPS
+  RECEIVE_SHOPS,
+  RECEIVE_USER,
+  RECEIVE_TOKEN,
+  LOGOUT
+
 } from './mutations-types'
 
 export default {
@@ -68,4 +71,32 @@ export default {
       })
     }
   },
+
+  /* 保存用户的action */
+  saveUser({
+    commit
+  }, user) {
+    const token = user.token
+    // 将token保存到local中
+    // localStorage.setItem('token_key', user.token)
+    localStorage.setItem('token_key', token)
+    commit(RECEIVE_TOKEN, {
+      token
+    })
+    delete user.token
+    commit(RECEIVE_USER, {
+      user
+    })
+  },
+
+  /* 退出登录 */
+  logout({
+    commit
+  }) {
+    //  清除local中的token
+    localStorage.removeItem('token_key')
+    // 清除state中user/token 
+    commit(LOGOUT)
+  }
+
 }

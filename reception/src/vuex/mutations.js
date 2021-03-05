@@ -3,7 +3,11 @@ import {
   RECEIVE_ADDRESS,
   RECEIVE_CATEGORYS,
   // RECEIVE_SHOPS
-  RECEIVE_SHOPS
+  RECEIVE_SHOPS,
+  RECEIVE_USER,
+  RECEIVE_TOKEN,
+  LOGOUT
+
 } from './mutations-types'
 
 export default {
@@ -22,4 +26,26 @@ export default {
   }) {
     state.shops = shops //更新state数据
   },
+
+
+
+
+  [RECEIVE_USER](state, {
+    user
+  }) {
+    state.user = user
+  },
+
+  [RECEIVE_TOKEN](state, {
+    token
+  }) {
+    state.token = token
+  },
+
+
+  [LOGOUT](state) {
+    state.token = ''
+    state.user = {}
+  }
+
 }

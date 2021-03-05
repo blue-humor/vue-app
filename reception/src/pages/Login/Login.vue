@@ -32,7 +32,8 @@
             <section class="login_verification">
               <input type="tel"
                      maxlength="8"
-                     placeholder="验证码">
+                     placeholder="验证码"
+                     v-model="code">
             </section>
             <section class="login_hint">
               温馨提示：未注册屌爆了外卖帐号的手机号，登录时将自动注册，且代表已同意
@@ -47,7 +48,8 @@
                        maxlength="11"
                        placeholder="手机/邮箱/用户名"
                        name="name"
-                       v-validate="{required:true}">
+                       v-validate="{required:true}"
+                       v-model="name">
                 <span style="color: red;"
                       v-show="errors.has('name')">{{ errors.first('name') }}</span>
               </section>
@@ -56,7 +58,8 @@
                        maxlength="8"
                        placeholder="密码"
                        name="pwd"
-                       v-validate="{required:true}">
+                       v-validate="{required:true}"
+                       v-model="pwd">
                 <span style="color: red;"
                       v-show="errors.has('pwd')">{{ errors.first('pwd') }}</span>
                 <div class="switch_button off"
@@ -70,15 +73,19 @@
               <section class="login_message">
                 <input type="text"
                        maxlength="11"
-                       placeholder="验证码">
-                <img class="get_verification"
-                     src="./images/captcha.svg"
-                     alt="captcha">
+                       placeholder="验证码"
+                       v-model="captcha">
+                <img ref="captcha"
+                     class="get_verification"
+                     src="http://localhost:4000/captcha"
+                     alt="captcha"
+                     @click="updateCaptcha">
               </section>
             </section>
           </div>
 
-          <button class="login_submit">登录</button>
+          <button class="login_submit"
+                  @click.prevent="login">登录</button>
         </form>
         <a href="javascript:;"
            class="about_us">关于我们</a>
@@ -94,30 +101,94 @@
 
 
 <script tppe="text/ecmascript-6">
+import { Toast, MessageBox } from 'mint-ui'
+
 import '../../validate.js'
+import { reqPwdLogin, reqSendCode, reqLoain_sms } from '../../api'
 export default {
   components: {},
   data() {
     return {
       loginWay: true, //true是短信验证  false是密码验证
       phone: '', //手机号
+      code: '', // 短信验证码
+      name: '', // 用户名
+      pwd: '', // 密码
+      captcha: '', // 图形验证码
       computedTime: 0, //计算剩余时间
       isShowPwd: false, //是否显示密码
     }
   },
 
   methods: {
-    sendCode() {
+    /* 发送短信验证码 */
+    async sendCode() {
+      // alert('短信发送成功'),
       // 设置computedTime为最大值
-      this.computedTime = 10
+      this.computedTime = 30
       // 启动循环定时器，每隔1s将omputedTime-1
       const intervalId = setInterval(() => {
         this.computedTime--
-        if (this.computedTime === 0) {
+        if (this.computedTime <= 0) {
           // 当计时 为01时候停止计时
           clearInterval(intervalId)
         }
       }, 1000)
+
+      // 发请求 => 发短信验证码的接口
+      const result = await reqSendCode(this.phone)
+      if (result.code === 0) {
+        Toast('短信发送成功')
+        // Toast('Upload Complete');
+      } else {
+        //  短信发送失败停止计时
+        this.computedTime = 0
+        // alert(result.msg)
+        MessageBox('提示', result.msg)
+      }
+    },
+
+    /* 更新图形验证码 */
+    updateCaptcha() {
+      // this.$refs.captcha.src = 'http://localhost:4000/captcha' //因为这里的值和以前一模一样  利用了缓存，然后就没法请求
+      this.$refs.captcha.src =
+        'http://localhost:4000/captcha?time=' + Date.now() //迷惑浏览器给个参数time，后台不需要
+    },
+
+    /* 短信验证 */
+    async login() {
+      let result
+      const { loginWay, phone, code, name, pwd, captcha } = this
+      // 发密码请求
+      if (!loginWay) {
+        result = await this.$API.reqPwdLogin({ name, pwd, captcha })
+
+        if (result.code != 0) {
+          //登录失败
+          // 更新图形验证码
+          this.updateCaptcha()
+          this.captcha = ''
+        }
+        //  发送短信请求
+      } else {
+        result = await this.$API.reqLoain_sms(phone, code)
+
+        // 请求结束后需要停止计时
+        this.computedTime = 0
+      }
+      // 根据请求结果进行处理
+      if (result.code === 0) {
+        // 登录请求成功
+        const user = result.data
+        console.log(user)
+        //保存user到state（内存）里面去
+        this.$store.dispatch('saveUser', user)
+        // 跳转到个人中心
+        this.$router.replace('/profile')
+      } else {
+        //登陆失败
+        MessageBox.alert(result.msg)
+      }
     },
   },
 

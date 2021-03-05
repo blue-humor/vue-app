@@ -11,9 +11,15 @@ export const reqAddress = (longitude, latitude) => ajax({
 })
 
 // 获取食品分类列表
-export const reqCategorys = () => ajax({
-  method: 'GET',
-  url: `/index_category`
+// export const reqCategorys = () => ajax({
+//   method: 'GET',
+//   url: `/index_category`,
+
+// })
+export const reqCategorys = () => ajax('/index_category', {
+  headers: {
+    needToken: true
+  }
 })
 
 // 根据经纬度获取商户列表
@@ -25,4 +31,48 @@ export const reqShops = ({
     latitude,
     longitude
   },
+  headers: {
+    needToken: true
+  }
+})
+
+// http://localhost:4000/sendcode?phone=13716962779
+// 发送短信验证码  参数phone
+export const reqSendCode = (phone) => ajax({
+  method: 'GET',
+  url: `/sendcode`,
+  params: {
+    phone
+  }
+})
+
+// http://localhost:4000/login_pwd
+// 用户名密码登陆
+export const reqPwdLogin = ({
+  name,
+  pwd,
+  captcha
+}) => ajax({
+  method: 'POST',
+  url: `/login_pwd`,
+  data: {
+    name,
+    pwd,
+    captcha
+  }
+})
+
+
+// http://localhost:5000/login_sms
+// 手机号验证码登陆
+export const reqLoain_sms = (
+  phone,
+  code
+) => ajax({
+  method: "POST",
+  url: '/login_sms',
+  data: {
+    phone,
+    code
+  }
 })
