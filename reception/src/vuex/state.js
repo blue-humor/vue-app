@@ -7,4 +7,7 @@ export default {
   shops: [], //商家数组
   user: {}, //登录用户信息
   token: localStorage.getItem('token_key'), //登录token标识
+  goods: [], //商品列表
+  ratings: [],
+  info: {}
 }

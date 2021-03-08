@@ -8,7 +8,7 @@
 
 <script tppe="text/ecmascript-6">
 import FooterGuide from './components/FooterGuide/FooterGuide.vue'
-import Start from './components/Start/Start.vue'
+// import Start from './components/Start/Start.vue'
 // import { reqAddress } from './api'
 
 // Vue.component('FooterGuide', FooterGuide)
@@ -16,6 +16,7 @@ export default {
   name: 'App',
   async mounted() {
     this.$store.dispatch('getAddress')
+    this.$store.dispatch('autoLogin')
   },
   components: { FooterGuide },
 }

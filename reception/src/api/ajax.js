@@ -22,7 +22,7 @@ instance.interceptors.request.use((config) => {
 
   // 处理token的问题
   const token = store.state.token
-  console.log(token);
+
   if (config.headers.needToken) {
     if (token) {
       //把token放入Authorization头里

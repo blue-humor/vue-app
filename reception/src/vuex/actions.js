@@ -4,7 +4,12 @@
 import {
   reqAddress,
   reqShops,
-  reqCategorys
+  reqCategorys,
+  reqAutoLogin,
+  reqRatings,
+  reqGoods,
+  reqInfo
+
 } from '../api'
 import {
   RECEIVE_ADDRESS,
@@ -12,7 +17,10 @@ import {
   RECEIVE_SHOPS,
   RECEIVE_USER,
   RECEIVE_TOKEN,
-  LOGOUT
+  LOGOUT,
+  RECEIVE_GOODS,
+  RECEIVE_INFO,
+  RECEIVE_RATINGS
 
 } from './mutations-types'
 
@@ -97,6 +105,62 @@ export default {
     localStorage.removeItem('token_key')
     // 清除state中user/token 
     commit(LOGOUT)
+  },
+
+  /* 自动登录 */
+  async autoLogin({
+    commit
+  }) {
+    const result = await reqAutoLogin()
+    if (result.code === 0) {
+      const user = result.data
+      commit(RECEIVE_USER, {
+        user
+      })
+    }
+  },
+
+  /* 异步获取商品列表 */
+  async getShopGoods({
+    commit
+  }, callback) {
+    const result = await reqGoods()
+    if (result.code === 0) {
+      const goods = result.data
+      commit(RECEIVE_GOODS, {
+        goods
+      })
+      callback && callback()
+    }
+
+  },
+
+  //异步获取商家评价列表
+  async getShopRatings({
+    commit
+  }, callback) {
+    const result = await reqRatings()
+    if (result.code === 0) {
+      const ratings = result.data
+      commit(RECEIVE_RATINGS, {
+        ratings
+      })
+      callback && callback()
+    }
+  },
+
+  // 异步获取商家信息
+  async getShopInfo({
+    commit
+  }, callback) {
+    const result = await reqInfo()
+    if (result.code === 0) {
+      const info = result.data
+      commit(RECEIVE_INFO, {
+        info
+      })
+      callback && callback()
+    }
   }
 
 }

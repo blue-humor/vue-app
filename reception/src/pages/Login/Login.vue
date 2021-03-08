@@ -104,7 +104,7 @@
 import { Toast, MessageBox } from 'mint-ui'
 
 import '../../validate.js'
-import { reqPwdLogin, reqSendCode, reqLoain_sms } from '../../api'
+import { reqSendCode } from '../../api'
 export default {
   components: {},
   data() {
@@ -180,7 +180,7 @@ export default {
       if (result.code === 0) {
         // 登录请求成功
         const user = result.data
-        console.log(user)
+        // console.log(user)
         //保存user到state（内存）里面去
         this.$store.dispatch('saveUser', user)
         // 跳转到个人中心

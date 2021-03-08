@@ -3,6 +3,9 @@
   每个接口的返回值都是一个promise对象
 */
 
+import {
+  result
+} from 'lodash'
 import ajax from './ajax'
 // http://localhost:4000/position   参数latitude  longitude  根据经纬度获取位置详情
 export const reqAddress = (longitude, latitude) => ajax({
@@ -76,3 +79,17 @@ export const reqLoain_sms = (
     code
   }
 })
+
+// http://localhost:4000/auto_login
+// 自动登录
+export const reqAutoLogin = () => ajax('/auto_login', {
+  headers: {
+    needToken: true
+  }
+})
+
+
+// goods
+export const reqGoods = () => ajax('/goods')
+export const reqInfo = () => ajax('/info')
+export const reqRatings = () => ajax('/ratings')

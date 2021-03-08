@@ -6,7 +6,12 @@ import {
   RECEIVE_SHOPS,
   RECEIVE_USER,
   RECEIVE_TOKEN,
-  LOGOUT
+  LOGOUT,
+
+  RECEIVE_GOODS,
+  RECEIVE_INFO,
+  RECEIVE_RATINGS
+
 
 } from './mutations-types'
 
@@ -46,6 +51,24 @@ export default {
   [LOGOUT](state) {
     state.token = ''
     state.user = {}
-  }
+  },
+
+  [RECEIVE_GOODS](state, {
+    goods
+  }) {
+    state.goods = goods
+  },
+
+  [RECEIVE_INFO](state, {
+    info
+  }) {
+    state.info = info
+  },
+
+  [RECEIVE_RATINGS](state, {
+    ratings
+  }) {
+    state.ratings = ratings
+  },
 
 }

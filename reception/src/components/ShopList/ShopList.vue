@@ -11,7 +11,8 @@
 
         <li class="shop_li border-1px"
             v-for="shop in shops"
-            :key="shop.id">
+            :key="shop.id"
+            @click="$router.push('/shop')">
           <a>
             <div class="shop_left">
               <img class="shop_img"

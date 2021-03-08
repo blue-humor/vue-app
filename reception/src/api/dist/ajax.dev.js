@@ -34,7 +34,6 @@ instance.interceptors.request.use(function (config) {
 
 
   var token = _store["default"].state.token;
-  console.log(token);
 
   if (config.headers.needToken) {
     if (token) {
