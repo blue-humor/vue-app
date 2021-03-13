@@ -31,12 +31,12 @@
             <ul>
               <li class="food-item bottom-border-1px"
                   v-for="food in good.foods"
-                  :key="food.name"
-                  @click="showFood(food)">
+                  :key="food.name">
                 <div class="icon">
                   <img width="57"
                        height="57"
-                       :src="food.icon">
+                       :src="food.icon"
+                       @click="showFood(food)">
                 </div>
                 <div class="content">
                   <h2 class="name">{{food.name}}</h2>
@@ -60,14 +60,16 @@
 
         </ul>
       </div>
+      <ShopCart />
     </div>
     <Food :food='food'
-          ref="food"></Food>
+          ref="food" />
   </div>
 </template>
 
 <script tppe="text/ecmascript-6">
 import Food from '../../components/Food/Food'
+import ShopCart from '../../components/ShopCart/ShopCart'
 import BScroll from '@better-scroll/core'
 import { mapState } from 'vuex'
 export default {
@@ -180,6 +182,7 @@ export default {
 
     /* 显示指定数据 */
     showFood(food) {
+      // 指定要显示的food数据
       this.food = food
       // this.isShowFood = true
       this.$refs.food.toggleShow()
@@ -190,6 +193,7 @@ export default {
   },
   components: {
     Food,
+    ShopCart,
   },
 }
 </script>

@@ -24,7 +24,7 @@
                   style="display: none;">￥{{food.oldPrice}}</span>
           </div>
           <div class="cartcontrol-wrapper">
-            <CartControl v-if="food.count"></CartControl>
+            <CartControl :food="food"></CartControl>
           </div>
         </div>
       </div>
@@ -35,9 +35,7 @@
 </template>
 
 <script tppe="text/ecmascript-6">
-import CartControl from '../CartControl/CartControl.vue'
 export default {
-  components: { CartControl },
   props: {
     food: Object,
   },
