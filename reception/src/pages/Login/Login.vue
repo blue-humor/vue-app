@@ -85,10 +85,14 @@
           </div>
 
           <button class="login_submit"
-                  @click.prevent="login">登录</button>
+                  @click.prevent="login">{{$t('login_login')}}</button>
         </form>
         <a href="javascript:;"
-           class="about_us">关于我们</a>
+           class="about_us">{{$t('login_aboutUs')}}</a>
+
+        <br>
+        <button class="login_submit"
+                @click.prevent="toggleLocale">切换语言</button>
       </div>
       <a href="javascript:"
          class="go_back"
@@ -96,6 +100,7 @@
         <i class="iconfont icon-jiantou2"></i>
       </a>
     </div>
+
   </section>
 </template>
 
@@ -153,6 +158,13 @@ export default {
       // this.$refs.captcha.src = 'http://localhost:4000/captcha' //因为这里的值和以前一模一样  利用了缓存，然后就没法请求
       this.$refs.captcha.src =
         'http://localhost:4000/captcha?time=' + Date.now() //迷惑浏览器给个参数time，后台不需要
+    },
+
+    /* 切换语言 */
+    toggleLocale() {
+      const locale = this.$i18n.locale === 'en' ? 'zh_CN' : 'en'
+      this.$i18n.locale = locale
+      localStorage.setItem('locale_key', locale)
     },
 
     /* 短信验证 */

@@ -21,7 +21,7 @@ instance.interceptors.request.use((config) => {
   }
 
   // 处理token的问题
-  const token = store.state.token
+  const token = store.state.user.token
 
   if (config.headers.needToken) {
     if (token) {

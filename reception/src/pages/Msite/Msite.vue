@@ -107,7 +107,11 @@ export default {
   // },
 
   computed: {
-    ...mapState(['address', 'categorys']),
+    // ...mapState(['address', 'categorys']),//多模块化vuex  数组方式已经不行了
+    ...mapState({
+      address: (state) => state.msite.address,
+      categorys: (state) => state.msite.categorys,
+    }),
 
     //  分类轮播的二维数组  小数组的长度最大为8
     categorysArr() {
@@ -121,43 +125,43 @@ export default {
 
 <style lang="stylus" rel="stylesheet/stylus" scoped>
 @import '../../common/mixins.styl'
-&.msite // 首页
+.msite // 首页
   width 100%
-.msite_nav
-  bottom-border-1px(#e4e4e4)
-  margin-top 45px
-  height 200px
-  background #fff
-  .swiper-container
-    width 100%
-    height 100%
-    .swiper-wrapper
+  .msite_nav
+    bottom-border-1px(#e4e4e4)
+    margin-top 45px
+    height 200px
+    background #fff
+    .swiper-container
       width 100%
       height 100%
-      .swiper-slide
-        display flex
-        justify-content center
-        align-items flex-start
-        flex-wrap wrap
-        .link_to_food
-          width 25%
-          .food_container
-            display block
-            width 100%
-            text-align center
-            padding-bottom 10px
-            font-size 0
-            img
-              display inline-block
-              width 50px
-              height 50px
-          span
-            display block
-            width 100%
-            text-align center
-            font-size 13px
-            color #666
-    .swiper-pagination
-      >span.swiper-pagination-bullet-active
-        background #02a774
+      .swiper-wrapper
+        width 100%
+        height 100%
+        .swiper-slide
+          display flex
+          justify-content center
+          align-items flex-start
+          flex-wrap wrap
+          .link_to_food
+            width 25%
+            .food_container
+              display block
+              width 100%
+              text-align center
+              padding-bottom 10px
+              font-size 0
+              img
+                display inline-block
+                width 50px
+                height 50px
+            span
+              display block
+              width 100%
+              text-align center
+              font-size 13px
+              color #666
+      .swiper-pagination
+        >span.swiper-pagination-bullet-active
+          background #02a774
 </style>

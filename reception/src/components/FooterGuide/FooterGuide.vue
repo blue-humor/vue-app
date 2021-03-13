@@ -7,7 +7,7 @@
       <span class="item_icon">
         <i class="iconfont icon-waimai"></i>
       </span>
-      <span>外卖</span>
+      <span>{{$t('footer_home')}}</span>
     </a>
     <a href="javascript:;"
        class="guide_item"
@@ -16,7 +16,7 @@
       <span class="item_icon">
         <i class="iconfont icon-search"></i>
       </span>
-      <span>搜索</span>
+      <span>{{$t('footer_search')}}</span>
     </a>
     <a href="javascript:;"
        class="guide_item"
@@ -25,7 +25,7 @@
       <span class="item_icon">
         <i class="iconfont icon-dingdan"></i>
       </span>
-      <span>订单</span>
+      <span>{{$t('footer_order')}}</span>
     </a>
     <a href="javascript:;"
        class="guide_item"
@@ -34,7 +34,7 @@
       <span class="item_icon">
         <i class="iconfont icon-geren"></i>
       </span>
-      <span>我的</span>
+      <span>{{$t('footer_own')}}</span>
     </a>
   </footer>
 </template>
@@ -44,7 +44,12 @@ export default {
   name: 'FooterGuide',
   methods: {
     goto(path) {
-      this.$router.replace(path)
+      if (this.$router.currentRoute.path !== path) {
+        this.$router.replace(path)
+      } else {
+        // window.location = path //刷新页面
+        window.location.reload() //这种无视hash模式  这种最好 强制刷新
+      }
     },
   },
 }

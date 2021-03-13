@@ -73,7 +73,10 @@ import { mapState } from 'vuex'
 // import Start from '../Start/Start.vue'
 export default {
   computed: {
-    ...mapState(['shops']),
+    // ...mapState(['shops']),
+    ...mapState({
+      shops: (state) => state.msite.shops,
+    }),
   },
 }
 </script>
