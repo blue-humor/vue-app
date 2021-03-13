@@ -5,7 +5,8 @@ import {
   RECEIVE_INFO,
   RECEIVE_RATINGS,
   ADD_FOOD_COUNT,
-  REDDUCE_FOOD_COUNT
+  REDDUCE_FOOD_COUNT,
+  CLEAR_CART
 } from '../mutations-types'
 import {
   reqRatings,
@@ -16,7 +17,8 @@ import {
 const state = {
   goods: [], //商品列表
   ratings: [],
-  info: {}
+  info: {},
+  cartFoods: [], //购物车所有的food数组
 }
 const mutations = {
 
@@ -46,6 +48,8 @@ const mutations = {
       // food.count = 1 //不会自动刚更新界面：新增加的属性没有数据绑定
       // 为响应对象添加一个属性，确保新属性也是响应式的，并且能够更新视图数据
       Vue.set(food, 'count', 1)
+      // 像food添加carfoods
+      state.cartFoods.push(food)
     } else {
       food.count++
     }
@@ -55,8 +59,18 @@ const mutations = {
   }) {
     if (food.count > 0) { //限制
       food.count--
+      if (food.count === 0) {
+        // 将food从cartfoods中移除
+        state.cartFoods.splice(state.cartFoods.indexOf(food), 1)
+      }
     }
   },
+  [CLEAR_CART](state) {
+    state.cartFoods.forEach(food => {
+      food.count = 0
+    })
+    state.cartFoods = []
+  }
 }
 
 
@@ -125,7 +139,39 @@ const actions = {
 
   }
 }
-const getters = {}
+const getters = { //计算属性初始是执行一次  数据发生变化话也会计算 效率太低
+  // cartFoods(state) {
+  //   return state.goods.reduce((pre, good) => {
+
+  //     good.foods.forEach(food => { 
+  //       if (food.count > 0) {
+  //         pre.push(food)
+  //       }
+  //     })
+  //     return pre
+  //   }, [])
+  // }
+
+  totalCount(state) {
+    return state.cartFoods.reduce((pre, food) => pre + food.count, 0)
+  },
+  totalPrice(state) {
+    return state.cartFoods.reduce((pre, food) => pre + food.count * food.price, 0)
+  },
+  /*
+  总商家评论数
+   */
+  totalRatingsCount(state) {
+    return state.ratings.length
+  },
+
+  /*
+  总商家推荐评论数
+   */
+  positiveRatingsCount(state) {
+    return state.ratings.reduce((pre, rating) => pre + (rating.rateType === 0 ? 1 : 0), 0)
+  }
+}
 export default {
   state,
   mutations,

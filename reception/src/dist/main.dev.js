@@ -20,6 +20,8 @@ var _Start = _interopRequireDefault(require("./components/Start/Start.vue"));
 
 var _CartControl = _interopRequireDefault(require("./components/CartControl/CartControl.vue"));
 
+var _Split = _interopRequireDefault(require("./components/Split/Split.vue"));
+
 var _store = _interopRequireDefault(require("./vuex/store"));
 
 var _i18n = _interopRequireDefault(require("./i18n"));
@@ -27,6 +29,8 @@ var _i18n = _interopRequireDefault(require("./i18n"));
 var API = _interopRequireWildcard(require("./api"));
 
 require("./mock/mockServer");
+
+require("./filters");
 
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
 
@@ -48,10 +52,13 @@ _vue["default"].component('Header', _Header["default"]);
 
 _vue["default"].component('Start', _Start["default"]);
 
+_vue["default"].component('Split', _Split["default"]);
+
 _vue["default"].component('CartControl', _CartControl["default"]);
 
 _vue["default"].component(_mintUi.Button.name, _mintUi.Button);
 
+_vue["default"].prototype.$eventBus = new _vue["default"]();
 new _vue["default"]({
   render: function render(h) {
     return h(_App["default"]);

@@ -2,54 +2,158 @@
   <div>
     <div class="shopcart">
       <div class="content">
-        <div class="content-left">
+        <div class="content-left"
+             @click="toggleShow">
           <div class="logo-wrapper">
-            <div class="logo highlight">
-              <i class="iconfont icon-shopping_cart highlight"></i>
+            <div class="logo "
+                 :class="{highlight:totalCount>0}">
+              <i class="iconfont icon-shopping_cart "
+                 :class="{highlight:totalCount>0}"></i>
             </div>
-            <div class="num">1</div>
+            <div class="num"
+                 v-if="totalCount>0">{{totalCount}}</div>
           </div>
-          <div class="price highlight">￥10</div>
-          <div class="desc">另需配送费￥4 元</div>
+          <div class="price "
+               :class="{highlight:totalCount>0}">￥{{totalPrice}}</div>
+          <div class="desc">另需配送费￥{{info.deliveryPrice}} 元</div>
         </div>
         <div class="content-right">
-          <div class="pay not-enough">
-            还差￥10 元起送
+          <div class="pay not-enough"
+               :class="payClass">
+            {{payText}}
           </div>
         </div>
       </div>
-      <div class="shopcart-list"
-           style="display: none;">
-        <div class="list-header">
-          <h1 class="title">购物车</h1>
-          <span class="empty">清空</span>
-        </div>
-        <div class="list-content">
-          <ul>
-            <li class="food">
-              <span class="name">红枣山药糙米粥</span>
-              <div class="price"><span>￥10</span></div>
-              <div class="cartcontrol-wrapper">
-                <div class="cartcontrol">
-                  <div class="iconfont icon-remove_circle_outline"></div>
-                  <div class="cart-count">1</div>
-                  <div class="iconfont icon-add_circle"></div>
-                </div>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
-    <div class="list-mask"
-         style="display: none;"></div>
-  </div>
 
+      <transition name="move">
+        <div class="shopcart-list"
+             v-show="listShow">
+          <div class="list-header">
+            <h1 class="title">购物车</h1>
+            <span class="empty"
+                  @click="createShop">清空</span>
+          </div>
+          <div class="list-content"
+               ref="foodList">
+            <ul>
+              <li class="food"
+                  v-for=" food in  cartFoods"
+                  :key="food.name">
+                <span class="name">{{food.name}}</span>
+                <div class="price"><span>￥{{food.price}}</span></div>
+                <div class="cartcontrol-wrapper">
+                  <CartControl :food="food" />
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </transition>
+
+    </div>
+
+    <transition name="fade">
+      <div class="list-mask"
+           v-show="listShow"
+           @click="toggleShow"></div>
+
+    </transition>
+  </div>
 </template>
 
 <script tppe="text/ecmascript-6">
+import { mapGetters, mapState } from 'vuex'
+import BScorll from '@better-scroll/core'
+import { MessageBox } from 'mint-ui'
+import { CLEAR_CART } from '../../vuex/mutations-types'
+import CartControl from '../CartControl/CartControl.vue'
+
 export default {
-  props: {},
+  components: { CartControl },
+  data() {
+    return {
+      isShow: false,
+    }
+  },
+
+  computed: {
+    ...mapState({
+      cartFoods: (state) => state.shop.cartFoods,
+      info: (state) => state.shop.info,
+    }),
+    ...mapGetters(['totalCount', 'totalPrice']),
+
+    payClass() {
+      const { totalPrice } = this
+      const { minPrice } = this.info
+      return totalPrice >= minPrice ? 'enough' : 'not-enough'
+    },
+
+    payText() {
+      const { totalPrice } = this
+      const { minPrice } = this.info
+      if (totalPrice === 0) {
+        return `￥${minPrice}元起送`
+      } else if (totalPrice < minPrice) {
+        return `还差￥${minPrice - totalPrice}元起送`
+      } else {
+        return `去结算`
+      }
+    },
+
+    listShow() {
+      if (this.totalCount === 0) {
+        // 必须将isShow设置为false
+
+        return false
+      }
+      if (this.isShow) {
+        /*
+         单列对象 
+         创建前：对象不存在
+         创建后：保存对象
+        */
+        this.$nextTick(() => {
+          if (!this.scroll) {
+            this.scroll = new BScorll(this.$refs.foodList, {
+              click: true,
+            })
+          } else {
+            // 通知scroll更新
+            this.scroll.refresh() //重新计算高度确定时是否滑动
+          }
+        })
+      }
+
+      return this.isShow
+    },
+  },
+
+  watch: {
+    listShow() {
+      if (this.totalCount === 0) {
+        // 必须将isShow设置为false
+        this.isShow = false
+        return false
+      }
+      return this.isShow
+    },
+  },
+
+  methods: {
+    toggleShow() {
+      // 限制当数量>0显示
+      if (this.totalCount > 0) {
+        this.isShow = !this.isShow
+      }
+    },
+
+    createShop() {
+      MessageBox.confirm('确定清空吗？').then(() => {
+        this.$store.commit(CLEAR_CART)
+      })
+    },
+  },
 }
 </script>
 
@@ -89,7 +193,7 @@ export default {
           text-align center
           background #2b343c
           &.highlight
-            background $green
+            background #4662d9
           .icon-shopping_cart
             line-height 44px
             font-size 24px
@@ -140,7 +244,7 @@ export default {
         &.not-enough
           background #2b333b
         &.enough
-          background #00b43c
+          background #4662d9
           color #fff
   .shopcart-list
     position absolute
@@ -202,7 +306,7 @@ export default {
   height 100%
   z-index 40
   backdrop-filter blur(10px)
-  opacity 1
+  opacity 0.5
   background rgba(7, 17, 27, 0.6)
   &.fade-enter-active, &.fade-leave-active
     transition opacity 0.5s

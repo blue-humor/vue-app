@@ -29,14 +29,14 @@
               :key="good.name">
             <h1 class="title">{{good.name}}</h1>
             <ul>
-              <li class="food-item bottom-border-1px"
+              <li class="food-item bottom-border-1px "
+                  @click="showFood(food)"
                   v-for="food in good.foods"
                   :key="food.name">
                 <div class="icon">
                   <img width="57"
                        height="57"
-                       :src="food.icon"
-                       @click="showFood(food)">
+                       :src="food.icon">
                 </div>
                 <div class="content">
                   <h2 class="name">{{food.name}}</h2>
