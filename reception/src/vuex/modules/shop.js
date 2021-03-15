@@ -164,10 +164,9 @@ const getters = { //计算属性初始是执行一次  数据发生变化话也�
   totalRatingsCount(state) {
     return state.ratings.length
   },
-
   /*
-  总商家推荐评论数
-   */
+   总商家推荐评论数
+    */
   positiveRatingsCount(state) {
     return state.ratings.reduce((pre, rating) => pre + (rating.rateType === 0 ? 1 : 0), 0)
   }

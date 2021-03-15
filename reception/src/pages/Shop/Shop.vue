@@ -19,7 +19,10 @@
       </div>
 
     </div>
-    <router-view></router-view>
+    <!-- 路由组件懒加载 -->
+    <keep-alive>
+      <router-view></router-view>
+    </keep-alive>
   </div>
 </template>
 

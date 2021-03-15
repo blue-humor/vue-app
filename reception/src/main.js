@@ -10,7 +10,7 @@ import loading from './common/images/loading.gif'
 
 import App from './App.vue'
 import router from './router'
-
+import Split from './components/Split/Split.vue'
 import Header from './components/Header/Header.vue'
 import Start from './components/Start/Start.vue'
 import CartControl from './components/CartControl/CartControl.vue'
@@ -20,7 +20,7 @@ import store from './vuex/store'
 import i18n from './i18n'
 import * as API from './api'
 import './mock/mockServer'
-
+import './filters/index'
 
 Vue.prototype.$API = API
 
@@ -30,6 +30,7 @@ Vue.prototype.$API = API
 Vue.use(VueLazyload, { //内部订立了全局指令：lazy
   loading,
 })
+Vue.prototype.$eventBus = new Vue()
 
 Vue.config.productionTip = false
 
@@ -37,6 +38,7 @@ Vue.config.productionTip = false
 Vue.component('Header', Header)
 Vue.component('Start', Start)
 Vue.component('CartControl', CartControl)
+Vue.component('Split', Split)
 
 
 

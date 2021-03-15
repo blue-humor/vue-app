@@ -203,8 +203,8 @@ var getters = {
   },
 
   /*
-  总商家推荐评论数
-   */
+   总商家推荐评论数
+    */
   positiveRatingsCount: function positiveRatingsCount(state) {
     return state.ratings.reduce(function (pre, rating) {
       return pre + (rating.rateType === 0 ? 1 : 0);
