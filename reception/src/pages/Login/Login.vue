@@ -210,6 +210,21 @@ export default {
       return /^1\d{10}$/.test(this.phone)
     },
   },
+
+  // 在当前组件对象创建前调用
+  // 进入登录界面是，如果已经登录了，自动跳转到个人中心
+  beforeRouteEnter(to, from, next) {
+    next((component) => {
+      //在组件对象创建之后执行，且会将组件对象传入
+      // 如果已经登录，自动跳转到profile
+      if (component.$store.state.user.token) {
+        next('/profile')
+      } else {
+        // 否则放行
+        next()
+      }
+    })
+  },
 }
 </script>
 
